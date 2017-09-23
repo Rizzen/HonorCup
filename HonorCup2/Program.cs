@@ -15,30 +15,38 @@ namespace HonorCup2
             var inputB = Console.ReadLine()?.Split(',');
             var inputA = Console.ReadLine()?.Split(',');
 
-            IEnumerable<double> InputToNumbers(IEnumerable<string> input)
+            if (!inputA.Contains("") || !inputB.Contains(""))
             {
-                var nums = new List<double>();
-                foreach (var i in input)
+                IEnumerable<double> InputToNumbers(IEnumerable<string> input)
                 {
-                    if (double.TryParse(i, NumberStyles.Number, CultureInfo.InvariantCulture, out var num))
-                        nums.Add(num);
-                    else
-                        Console.WriteLine("Wrong Input!");
+                    var nums = new List<double>();
+                    foreach (var i in input)
+                    {
+                        if (double.TryParse(i, NumberStyles.Number, CultureInfo.InvariantCulture, out var num))
+                            nums.Add(num);
+                        else
+                            Console.WriteLine("Wrong Input!");
+                    }
+                    return nums;
                 }
-                return nums;
+
+                var numbersA = InputToNumbers(inputA);
+                var numbersB = InputToNumbers(inputB);
+
+                foreach (var number in numbersA)
+                {
+                    Console.WriteLine(number);
+                }
+
+                Filter.FrequencyGrid();
+
+                Console.ReadLine();
             }
-
-            var numbersA = InputToNumbers(inputA);
-            var numbersB = InputToNumbers(inputB);
-
-            foreach (var number in numbersA)
+            else
             {
-                Console.WriteLine(number);
+                Console.WriteLine("Wrong Input!");
+                Console.ReadLine();
             }
-
-            Filter.FrequencyGrid();
-
-            Console.ReadLine();
         }
     }
 }

@@ -9,6 +9,7 @@ namespace HonorCup2
 {
     internal class Filter
     {
+        //по условию
         private const double K = 512;
         
         /// <summary>Возвращает сетку частот</summary>
