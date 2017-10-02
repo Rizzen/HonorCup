@@ -11,8 +11,8 @@ namespace HonorCup2
     {
         //по условию
         private const double K = 512;
-        
-        /// <summary>Возвращает сетку частот</summary>
+
+        /// <summary>Frequency Grid</summary>
         public static double[] FrequencyGrid ()
         {
             var grid = new double[512];
@@ -24,7 +24,7 @@ namespace HonorCup2
             return grid;
         }
 
-        /// <summary>Комплексный коэффициент передачи</summary>
+        /// <summary>Complex Transfer Сoefficient</summary>
         public static Complex ComplexTransferСoefficient(double[] quants, double omegaFrequency)
         {
             var res = ComplexSumB(quants, omegaFrequency) 
@@ -32,7 +32,7 @@ namespace HonorCup2
             return res;
         }
 
-        /// <summary>Комплексная сумма для b (начинается с нуля)</summary>
+        /// <summary>Complex Sum for B (начинается с нуля)</summary>
         public static Complex ComplexSumB(double[] quants, double omegaFrequency)
         {
             var sum = new Complex(0, 0);
@@ -45,7 +45,7 @@ namespace HonorCup2
             return sum;
         }
 
-        /// <summary>Комплексная сумма для a (начинается с единицы)</summary>
+        /// <summary>Complex Sum for A (started with 1)</summary>
         public static Complex ComplexSumA(double[] quants, double omegaFrequency)
         {
             var sum = new Complex(0, 0);
@@ -58,6 +58,26 @@ namespace HonorCup2
             return sum;
         }
 
-        //Mean Square of Error must be here
+        /// <summary>Rounding rule</summary>
+        public static double FilterRound(double number) => Math.Round(number * 16);
+
+        
+        /// <summary>Mean Square of Error</summary>
+        public static double MeanSquareOfError(double[] quants, double[] roundedQuants)
+        {
+            var fGrid = FrequencyGrid();
+            var sum = 0d;
+            for (int i = 0; i < 512; i++)
+            {
+                var Hq = ComplexTransferСoefficient(roundedQuants, fGrid[i]);
+                var H = ComplexTransferСoefficient(quants, fGrid[i]);
+                var summary = Math.Pow(Complex.Abs(Hq - H), 2);
+                sum += summary;
+            }
+
+            sum = sum / K;
+
+            return sum;
+        }
     }
 }

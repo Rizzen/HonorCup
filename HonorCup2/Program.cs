@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,41 +13,45 @@ namespace HonorCup2
     {
         static void Main()
         {
-            var inputB = Console.ReadLine()?.Split(',');
-            var inputA = Console.ReadLine()?.Split(',');
+            //var inputB = Console.ReadLine()?.Split(',');
+            //var inputA = Console.ReadLine()?.Split(',');
 
-            if (!inputA.Contains("") || !inputB.Contains(""))
-            {
-                IEnumerable<double> InputToNumbers(IEnumerable<string> input)
-                {
-                    var nums = new List<double>();
-                    foreach (var i in input)
-                    {
-                        if (double.TryParse(i, NumberStyles.Number, CultureInfo.InvariantCulture, out var num))
-                            nums.Add(num);
-                        else
-                            Console.WriteLine("Wrong Input!");
-                    }
-                    return nums;
-                }
+            //if (!inputA.Contains("") || !inputB.Contains(""))
+            //{
+            //    IEnumerable<double> InputToNumbers(IEnumerable<string> input)
+            //    {
+            //        var nums = new List<double>();
+            //        foreach (var i in input)
+            //        {
+            //            if (double.TryParse(i, NumberStyles.Number, CultureInfo.InvariantCulture, out var num))
+            //                nums.Add(num);
+            //            else
+            //                Console.WriteLine("Wrong Input!");
+            //        }
+            //        return nums;
+            //    }
 
-                var numbersA = InputToNumbers(inputA);
-                var numbersB = InputToNumbers(inputB);
+            //    var numbersA = InputToNumbers(inputA);
+            //    var numbersB = InputToNumbers(inputB);
 
-                foreach (var number in numbersA)
-                {
-                    Console.WriteLine(number);
-                }
+            //    foreach (var number in numbersA)
+            //    {
+            //        Console.WriteLine(number);
+            //    }
 
-                Filter.FrequencyGrid();
+            //    Filter.FrequencyGrid();
 
-                Console.ReadLine();
-            }
-            else
-            {
-                Console.WriteLine("Wrong Input!");
-                Console.ReadLine();
-            }
+            //    Console.ReadLine();
+            //}
+            //else
+            //{
+            //    Console.WriteLine("Wrong Input!");
+            //    Console.ReadLine();
+            //}
+            
+            //Console.WriteLine($"{Complex.Abs(new Complex(1,1) * new Complex(1, 1))}");
+            Console.WriteLine($"{Filter.FilterRound(0.10)}");
+            Console.ReadLine();
         }
     }
 }
