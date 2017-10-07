@@ -9,7 +9,7 @@ namespace HonorCup2
 {
     internal class Filter
     {
-        //по условию
+        //From Statement
         private const double K = 512;
 
         /// <summary>Frequency Grid</summary>
@@ -61,6 +61,15 @@ namespace HonorCup2
         /// <summary>Rounding rule</summary>
         public static double FilterRound(double number) => Math.Round(number * 16);
 
+        /// <summary>Round Array</summary>
+        public static double[] FilterRoundArray(double[] array)
+        {
+            for (int i = 0; i < array.Length; i++)
+            {
+                array[i] = FilterRound(array[i]);
+            }
+            return array;
+        }
         
         /// <summary>Mean Square of Error</summary>
         public static double MeanSquareOfError(double[] quants, double[] roundedQuants)

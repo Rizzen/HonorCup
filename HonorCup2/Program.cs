@@ -48,9 +48,19 @@ namespace HonorCup2
             //    Console.WriteLine("Wrong Input!");
             //    Console.ReadLine();
             //}
-            
+
             //Console.WriteLine($"{Complex.Abs(new Complex(1,1) * new Complex(1, 1))}");
-            Console.WriteLine($"{Filter.FilterRound(0.10)}");
+
+            var arr = new[] {0, 1, 0, 0, 0, 1, 1};
+
+            var res = Genetics.MutateValues(arr);
+
+            foreach (var i in res)
+            {
+                Console.WriteLine($"{i}");
+            }
+
+            //Console.WriteLine($"{arr.Count(x => x == 0)}");
             Console.ReadLine();
         }
     }
