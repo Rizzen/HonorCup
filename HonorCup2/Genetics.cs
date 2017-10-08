@@ -9,40 +9,52 @@ namespace HonorCup2
     internal class Genetics
     {
         
-        private const int MaxPopulation = 50;
+        private const int MaxPopulation = 100;
         
         private static Gene[] populaton = new Gene[MaxPopulation];
 
         private static Random r;
         /// <summary>Solve the task</summary>
-        public static int[] Solve(double[] aQuants, double[] bQuants, int[] aRoundedQuants, int[] bRoundedQuants)
+        public static Gene Solve(double[] aQuants, double[] bQuants, int[] aRoundedQuants, int[] bRoundedQuants)
         {
             r = new Random();
-            var Choosen = new Dictionary<Gene, double>();
+            var Choosen = new List<Gene>();
             //get zero indexes
             var aZeroIndexes = GetZeroValueIndexes(aRoundedQuants);
             var bZeroIndexes = GetZeroValueIndexes(bRoundedQuants);
 
             //create start population
-            for (int i = 0; i < 50; i++)
+            for (int i = 0; i < MaxPopulation; i++)
             {
                 populaton[i] = new Gene(aRoundedQuants, bRoundedQuants, aZeroIndexes, bZeroIndexes).Mutate();
             }
             
             //calc fitness for current population
             CalclulatePopulationFitness(aQuants, bQuants, populaton);
+            //generate likehoods for population
             GenerateLikehoods(populaton);
+
+            //new population
             var pop = CreateNewPopulation(populaton);
             CalclulatePopulationFitness(aQuants, bQuants, pop);
+            var dweller = NaturalSelection(pop);
+            GenerateLikehoods(pop);
 
             var iterator = 0;
-            while (iterator<20)
+            while (iterator < 50)
             {
-                GenerateLikehoods(pop);
                 pop = CreateNewPopulation(pop);
                 CalclulatePopulationFitness(aQuants, bQuants, pop);
-                var dweller = NaturalSelection(pop);
-                Choosen.Add(dweller, dweller.Fitness);
+                GenerateLikehoods(pop);
+                var newDweller = NaturalSelection(pop);
+                if (newDweller.Fitness > dweller.Fitness)
+                {
+                    pop = CreateMutants(pop);
+                    CalclulatePopulationFitness(aQuants, bQuants, pop);
+                    GenerateLikehoods(pop);
+                    newDweller = NaturalSelection(pop);
+                }
+                Choosen.Add(newDweller);
                 Console.WriteLine($"Generation {iterator}");
                 iterator++;
             }
@@ -50,20 +62,21 @@ namespace HonorCup2
             foreach (var d in Choosen)
             {
                 var str = "A alleles is: ";
-                foreach (var aa in d.Key.AAlleles)
+                foreach (var aa in d.AAlleles)
                 {
                     str = String.Concat(str, $" {aa} ");
                 }
                 str = String.Concat(str, "\nB alleles is:");
 
-                foreach (var aa in d.Key.BAlleles)
+                foreach (var aa in d.BAlleles)
                 {
                     str = String.Concat(str, $" {aa} ");
                 }
-                str = String.Concat(str, $"\n Fitsess is {d.Value}");
+                str = String.Concat(str, $"\n Fitsess is {d.Fitness}");
                 Console.WriteLine(str);
             }
-            return new int[0];
+
+            return Choosen.OrderByDescending(x => x.Fitness).Last();
         }
 
         public static Gene NaturalSelection(Gene[] _population)
@@ -173,8 +186,6 @@ namespace HonorCup2
                     child = child.Mutate();
                 }
             }
-            
-
             return child;
         }
         
@@ -187,6 +198,20 @@ namespace HonorCup2
             {
                 var parent1 = GetGeneForCrossover(_population);
                 var parent2 = GetGeneForCrossover(_population);
+                var child = Breed(parent1, parent2);
+                newPopulation[i] = child;
+            }
+            return newPopulation;
+        }
+
+        public static Gene[] CreateMutants(Gene[] _population)
+        {
+            var newPopulation = new Gene[MaxPopulation];
+
+            for (int i = 0; i < newPopulation.Length; i++)
+            {
+                var parent1 = GetGeneForCrossover(_population).Mutate();
+                var parent2 = GetGeneForCrossover(_population).Mutate();
                 var child = Breed(parent1, parent2);
                 newPopulation[i] = child;
             }

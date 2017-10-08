@@ -57,7 +57,7 @@ namespace HonorCup2
             var aNewArr = Filter.FilterRoundArray(aArr);
             var bNewArr = Filter.FilterRoundArray(bArr);
 
-            Genetics.Solve(aArr, bArr, aNewArr, bNewArr);
+            var gene = Genetics.Solve(aArr, bArr, aNewArr, bNewArr);
             //var d = newArr.Select(x => (double) x).ToArray();
 
             //var mse = Filter.MeanSquareOfError(arr, d);
@@ -68,7 +68,7 @@ namespace HonorCup2
             //    Console.WriteLine($"{i}");
             //}
 
-            //Console.WriteLine($"{mse}");
+            Console.WriteLine($"{gene.Fitness}");
 
             //Console.WriteLine($"{arr.Count(x => x == 0)}");
             Console.ReadLine();
