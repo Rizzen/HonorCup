@@ -79,6 +79,7 @@ namespace HonorCup2
             }
             return roundedArray;
         }
+
         
         /// <summary>Mean Square of Error</summary>
         public static double MeanSquareOfError(double[] aQuants, double[] bQuants, int[] bRoundedQuants, int[] aRoundedQuants)

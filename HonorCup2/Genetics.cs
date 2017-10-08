@@ -18,6 +18,7 @@ namespace HonorCup2
         public static int[] Solve(double[] aQuants, double[] bQuants, int[] aRoundedQuants, int[] bRoundedQuants)
         {
             r = new Random();
+            var Choosen = new Dictionary<Gene, double>();
             //get zero indexes
             var aZeroIndexes = GetZeroValueIndexes(aRoundedQuants);
             var bZeroIndexes = GetZeroValueIndexes(bRoundedQuants);
@@ -30,10 +31,46 @@ namespace HonorCup2
             
             //calc fitness for current population
             CalclulatePopulationFitness(aQuants, bQuants, populaton);
-            
+            GenerateLikehoods(populaton);
+            var pop = CreateNewPopulation(populaton);
+            CalclulatePopulationFitness(aQuants, bQuants, pop);
+
+            var iterator = 0;
+            while (iterator<20)
+            {
+                GenerateLikehoods(pop);
+                pop = CreateNewPopulation(pop);
+                CalclulatePopulationFitness(aQuants, bQuants, pop);
+                var dweller = NaturalSelection(pop);
+                Choosen.Add(dweller, dweller.Fitness);
+                Console.WriteLine($"Generation {iterator}");
+                iterator++;
+            }
+
+            foreach (var d in Choosen)
+            {
+                var str = "A alleles is: ";
+                foreach (var aa in d.Key.AAlleles)
+                {
+                    str = String.Concat(str, $" {aa} ");
+                }
+                str = String.Concat(str, "\nB alleles is:");
+
+                foreach (var aa in d.Key.BAlleles)
+                {
+                    str = String.Concat(str, $" {aa} ");
+                }
+                str = String.Concat(str, $"\n Fitsess is {d.Value}");
+                Console.WriteLine(str);
+            }
             return new int[0];
         }
-        
+
+        public static Gene NaturalSelection(Gene[] _population)
+        {
+            return _population.OrderByDescending(x => x.Fitness).Last();
+        }
+
         /// <summary>Returns indexes of zero elements of array</summary>
         public static Dictionary<int, int> GetZeroValueIndexes(int[] array)
         {
@@ -64,10 +101,14 @@ namespace HonorCup2
             foreach (var gene in _population)
             {
                 gene.Fitness = Filter.MeanSquareOfError(aStartQuants, bStartQuants, gene.BAlleles, gene.AAlleles);
-                Console.WriteLine(gene.Fitness);
+                //Console.WriteLine(gene.Fitness);
             }
         }
 
+        public static double Fitnessest(Gene[] _population)
+        {
+            return _population.Min(x => x.Fitness);
+        }
 
         public static void GenerateLikehoods(Gene[] _population)
         {
@@ -80,17 +121,19 @@ namespace HonorCup2
 
         public static Gene GetGeneForCrossover(Gene[] _population)
         {
-            var averageLikelihood = _population.Average(x => x.Likelihood);
-            foreach (Gene gene in _population)
-            {
-                var num = r.NextDouble();
-                if (num >= averageLikelihood)
-                {
-                    return gene;
-                }
-            }
+            var pop = _population.OrderByDescending(x=>x.Fitness).ToArray();
+            return pop[r.Next(pop.Length/2)];
+            //var averageLikelihood = _population.Average(x => x.Likelihood) * 100;
+            //foreach (Gene gene in _population)
+            //{
+            //    var num = r.Next(0, (int) averageLikelihood * 2);
+            //    if (num >= averageLikelihood)
+            //    {
+            //        return gene;
+            //    }
+            //}
 
-            return _population[r.Next(_population.Length - 1)];
+            //return _population[r.Next(_population.Length - 1)];
         }
 
         public static double MultInv(Gene[] _population)
@@ -98,7 +141,7 @@ namespace HonorCup2
             return _population.Sum(x => (1 / x.Fitness));
         }
 
-        /// <summary>Breed</summary>
+        /// <summary>Returns Child of two parents</summary>
         public static Gene Breed(Gene parent1, Gene parent2)
         {
             //selecting crossover point
@@ -106,32 +149,36 @@ namespace HonorCup2
             
             //initial child
             var child = new Gene(parent1.AAlleles, parent1.BAlleles, parent1.aZeroIndexes, parent1.bZeroIndexes);
-
-            //whos alleles comes first?
-            var whoIsFirst = r.NextDouble();
-            var initial = 0;
-            var final = child.AAlleles.Length - 1 - crossPoint;
-            if (whoIsFirst >= 0.5)
+            while (child.BAlleles.Any(x => x == 0) || child.AAlleles.Any(x => x == 0))
             {
-                initial = crossPoint;
-            }
+                //whos alleles comes first?
+                var whoIsFirst = r.NextDouble();
+                var initial = 0;
+                var final = child.AAlleles.Length - 1 - crossPoint;
+                if (whoIsFirst >= 0.5)
+                {
+                    initial = crossPoint;
+                }
 
-            //Crossover!
-            for (int i = initial; i < final; i++)
-            {
-                child.AAlleles[i] = parent2.AAlleles[i];
-                child.BAlleles[i] = parent2.BAlleles[i];
-            }
+                //Crossover!
+                for (int i = initial; i < final; i++)
+                {
+                    child.AAlleles[i] = parent2.AAlleles[i];
+                    child.BAlleles[i] = parent2.BAlleles[i];
+                }
 
-            //for great selection!
-            if (r.NextDouble() >= 0.05)
-            {
-                child = child.Mutate();
+                //for great selection!
+                if (r.NextDouble() <= 0.05)
+                {
+                    child = child.Mutate();
+                }
             }
+            
 
             return child;
         }
         
+        /// <summary>Generate new population based on specified </summary>
         public static Gene[] CreateNewPopulation(Gene[] _population)
         {
             var newPopulation = new Gene[MaxPopulation];

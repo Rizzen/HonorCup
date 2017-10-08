@@ -40,7 +40,7 @@ namespace HonorCup2
             
             var gene = new Gene(_aAlleles, _bAlleles, aZeroIndexes, bZeroIndexes);
 
-            Console.WriteLine(gene.ToString());
+            //Console.WriteLine(gene.ToString());
             return gene;
         }
 
@@ -50,7 +50,7 @@ namespace HonorCup2
             for (int i = 0; i < alleles.Length; i++)
             {
                 if (zeroIndexes.ContainsKey(i))
-                    res[i] = r.Next(-255, 255);
+                    res[i] += r.Next(-5, 5);
                 else
                     res[i] = alleles[i];
             }
