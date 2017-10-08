@@ -7,13 +7,21 @@ using System.Threading.Tasks;
 
 namespace HonorCup2
 {
-    internal class Filter
+    /// <summary>Represents methods collection for filter coefficients calculation</summary>
+    internal static class Filter
     {
         //From Statement
         private const double K = 512;
 
+        public static double[] FrequencyGrid { get; set; }
+
+        static Filter()
+        {
+            FrequencyGrid = GetFrequencyGrid();
+        }
+
         /// <summary>Frequency Grid</summary>
-        public static double[] FrequencyGrid ()
+        public static double[] GetFrequencyGrid ()
         {
             var grid = new double[512];
             for (int i = 0; i < 512; i++)
@@ -32,7 +40,7 @@ namespace HonorCup2
             return res;
         }
 
-        /// <summary>Complex Sum for B (начинается с нуля)</summary>
+        /// <summary>Complex Sum for B (starting with 0)</summary>
         public static Complex ComplexSumB(double[] quants, double omegaFrequency)
         {
             var sum = new Complex(0, 0);
@@ -45,7 +53,7 @@ namespace HonorCup2
             return sum;
         }
 
-        /// <summary>Complex Sum for A (started with 1)</summary>
+        /// <summary>Complex Sum for A (starting with 1)</summary>
         public static Complex ComplexSumA(double[] quants, double omegaFrequency)
         {
             var sum = new Complex(0, 0);
@@ -74,7 +82,7 @@ namespace HonorCup2
         /// <summary>Mean Square of Error</summary>
         public static double MeanSquareOfError(double[] quants, double[] roundedQuants)
         {
-            var fGrid = FrequencyGrid();
+            var fGrid = FrequencyGrid;
             var sum = 0d;
             for (int i = 0; i < 512; i++)
             {

@@ -9,8 +9,18 @@ namespace HonorCup2
 {
     internal class Genetics
     {
+        private const int MaxPopulation = 50;
+        private int GeneSize;
+
+        public int[] Solve(double[] quants)
+        {
+
+            return new int[0];
+        }
+        
+
         /// <summary>Returns Indexes of zero elements of array</summary>
-        public static Dictionary<int, int> GetZeroes(int[] array)
+        public static Dictionary<int, int> GetZeroValueIndexes(int[] array)
         {
             var zeroIndexes = new Dictionary<int, int>();
             for (var i = 0; i < array.Length; i++)
@@ -26,9 +36,8 @@ namespace HonorCup2
         //test
         public static Dictionary<int, int> MutateZeroValues(Dictionary<int, int> newValues)
         {
-            var mutated = newValues.Select(x => new KeyValuePair<int, int>(x.Key, 11))
+            return newValues.Select(x => new KeyValuePair<int, int>(x.Key, 11))
                                    .ToDictionary(x => x.Key, y => y.Value);
-            return mutated;
         }
 
         /// <summary>Returned values from newValues to its places in array</summary>
@@ -44,11 +53,13 @@ namespace HonorCup2
         //test
         public static int[] MutateValues(int[] array)
         {
-            var zeroes = GetZeroes(array);
+            var zeroes = GetZeroValueIndexes(array);
             var mutated = MutateZeroValues(zeroes);
             var result = ReturnValuesInPlace(array, mutated);
 
             return result;
         }
+        
+
     }
 }
