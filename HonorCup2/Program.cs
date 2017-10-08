@@ -51,11 +51,12 @@ namespace HonorCup2
 
             //Console.WriteLine($"{Complex.Abs(new Complex(1,1) * new Complex(1, 1))}");
 
-            var aArr = new[] {1, 4.8444, 10.3069, -12.2480, 8.5481, -3.3180};
-            var bArr = new[] {0.0007, -0.0001, 0.0012, 0.0001, -0.0001, 0.0007};
+            var aArr = new[] {1, 4.8444, 10.3069, -12.2480, 8.5481, -3.3180, 1, 4.8444, 10.3069, -12.2480, 8.5481, -3.3180 };
+            var bArr = new[] {0.0007, -0.0001, 0.0012, 0.0001, -0.0001, 0.0007, 0.0007, -0.0001, 0.0012, 0.0001, -0.0001, 0.0007 };
 
             var aNewArr = Filter.FilterRoundArray(aArr);
             var bNewArr = Filter.FilterRoundArray(bArr);
+
             Genetics.Solve(aArr, bArr, aNewArr, bNewArr);
             //var d = newArr.Select(x => (double) x).ToArray();
 

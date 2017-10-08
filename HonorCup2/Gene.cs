@@ -8,14 +8,14 @@ namespace HonorCup2
 {
     internal class Gene
     {
-        public int[] aAlleles;
-        public int[] bAlleles;
+        public int[] AAlleles;
+        public int[] BAlleles;
 
         public double Fitness;
         public double Likelihood;
         
-        private readonly Dictionary<int, int> aZeroIndexes;
-        private readonly Dictionary<int, int> bZeroIndexes;
+        public readonly Dictionary<int, int> aZeroIndexes;
+        public readonly Dictionary<int, int> bZeroIndexes;
         private static readonly Random r;
 
         static Gene()
@@ -28,15 +28,15 @@ namespace HonorCup2
         {
             aZeroIndexes = _aZeroIndexes;
             bZeroIndexes = _bZeroIndexes;
-            bAlleles = bQuants;
-            aAlleles = aQuants;
+            BAlleles = bQuants;
+            AAlleles = aQuants;
         }
         
         /// <summary>Mutate gene</summary>
         public Gene Mutate()
         {
-            int[] _aAlleles = mutateAlleles(aAlleles, aZeroIndexes);
-            int[] _bAlleles = mutateAlleles(bAlleles, bZeroIndexes);
+            int[] _aAlleles = mutateAlleles(AAlleles, aZeroIndexes);
+            int[] _bAlleles = mutateAlleles(BAlleles, bZeroIndexes);
             
             var gene = new Gene(_aAlleles, _bAlleles, aZeroIndexes, bZeroIndexes);
 
@@ -64,12 +64,12 @@ namespace HonorCup2
         public override string ToString()
         {
             var str = $"Gene {this.GetHashCode()} contains:";
-            foreach (var a in aAlleles)
+            foreach (var a in AAlleles)
             {
                 str = String.Concat(str, $"_{a}_");
             }
             str = String.Concat(str, "\n");
-            foreach (var b in bAlleles)
+            foreach (var b in BAlleles)
             {
                 str = String.Concat(str, $"_{b}_");
             }
