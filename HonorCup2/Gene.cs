@@ -19,7 +19,7 @@ namespace HonorCup2
         static Gene()
         {
             r = new Random();
-            Console.WriteLine("in static ctor");
+            
         }
 
         public Gene(int[] quants, Dictionary<int, int> _zeroIndexes) // possible to add list of quants here
