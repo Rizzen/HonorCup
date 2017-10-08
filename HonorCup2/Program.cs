@@ -55,7 +55,7 @@ namespace HonorCup2
 
             var newArr = Filter.FilterRoundArray(arr);
 
-            Genetics.Solve(newArr);
+            Genetics.Solve(arr, newArr);
             //var d = newArr.Select(x => (double) x).ToArray();
 
             //var mse = Filter.MeanSquareOfError(arr, d);

@@ -33,10 +33,10 @@ namespace HonorCup2
         }
 
         /// <summary>Complex Transfer Сoefficient</summary>
-        public static Complex ComplexTransferСoefficient(double[] quants, double omegaFrequency)
+        public static Complex ComplexTransferСoefficient(double[] aQuants, double[] bQuants, double omegaFrequency)
         {
-            var res = ComplexSumB(quants, omegaFrequency) 
-                     / (new Complex(1, 0) + ComplexSumA(quants, omegaFrequency));
+            var res = ComplexSumB(bQuants, omegaFrequency) 
+                     / (new Complex(1, 0) + ComplexSumA(aQuants, omegaFrequency));
             return res;
         }
 
@@ -99,15 +99,17 @@ namespace HonorCup2
         }
 
         /// <summary>Mean Square of Error</summary>
-        public static double MeanSquareOfError(double[] quants, int[] roundedQuants)
+        public static double MeanSquareOfError(double[] aQuants, double[] bQuants, int[] bRoundedQuants, int[] aRoundedQuants)
         {
-            var rq = ToDoubleArray(roundedQuants);
+            var Arq = ToDoubleArray(aRoundedQuants);
+            var Brq = ToDoubleArray(bRoundedQuants);
+
             var fGrid = FrequencyGrid;
             var sum = 0d;
             for (int i = 0; i < 512; i++)
             {
-                var Hq = ComplexTransferСoefficient(rq, fGrid[i]);
-                var H = ComplexTransferСoefficient(quants, fGrid[i]);
+                var Hq = ComplexTransferСoefficient(Arq, Brq, fGrid[i]);
+                var H = ComplexTransferСoefficient(aQuants, bQuants, fGrid[i]);
                 var summary = Math.Pow(Complex.Abs(Hq - H), 2);
                 sum += summary;
             }
@@ -117,6 +119,7 @@ namespace HonorCup2
             return sum;
         }
 
+        //helper
         private static double[] ToDoubleArray(int[] array)
         {
             return array.Select(x => (double) x).ToArray();

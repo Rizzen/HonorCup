@@ -23,8 +23,11 @@ namespace HonorCup2
                 populaton[i] = new Gene(roundedQuants, zeroIndexes).Mutate();
                 
             }
-            //calc fitness
+
+            //calc fitness for current population
             CalclulatePopulationFitness(quants, populaton);
+
+
 
             return new int[0];
         }
@@ -58,6 +61,7 @@ namespace HonorCup2
             foreach (var gene in _population)
             {
                 gene.Fitness = Filter.MeanSquareOfError(startQuants, gene.Alleles);
+                Console.WriteLine(gene.Fitness);
             }
         }
 

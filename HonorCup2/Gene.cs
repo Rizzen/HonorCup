@@ -22,7 +22,7 @@ namespace HonorCup2
             
         }
 
-        public Gene(int[] quants, Dictionary<int, int> _zeroIndexes) // possible to add list of quants here
+        public Gene(int[] quants, Dictionary<int, int> _zeroIndexes)
         {
             zeroIndexes = _zeroIndexes;
             Alleles = quants;
