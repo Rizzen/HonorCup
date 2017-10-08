@@ -26,9 +26,7 @@ namespace HonorCup2
 
             //calc fitness for current population
             CalclulatePopulationFitness(aQuants, bQuants, populaton);
-
-
-
+            
             return new int[0];
         }
         

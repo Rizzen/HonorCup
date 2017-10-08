@@ -81,24 +81,6 @@ namespace HonorCup2
         }
         
         /// <summary>Mean Square of Error</summary>
-        public static double MeanSquareOfError(double[] quants, double[] roundedQuants)
-        {
-            var fGrid = FrequencyGrid;
-            var sum = 0d;
-            for (int i = 0; i < 512; i++)
-            {
-                var Hq = ComplexTransferСoefficient(roundedQuants, fGrid[i]);
-                var H = ComplexTransferСoefficient(quants, fGrid[i]);
-                var summary = Math.Pow(Complex.Abs(Hq - H), 2);
-                sum += summary;
-            }
-
-            sum = sum / K;
-
-            return sum;
-        }
-
-        /// <summary>Mean Square of Error</summary>
         public static double MeanSquareOfError(double[] aQuants, double[] bQuants, int[] bRoundedQuants, int[] aRoundedQuants)
         {
             var Arq = ToDoubleArray(aRoundedQuants);

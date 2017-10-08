@@ -64,9 +64,14 @@ namespace HonorCup2
         public override string ToString()
         {
             var str = $"Gene {this.GetHashCode()} contains:";
-            foreach (var a in Alleles)
+            foreach (var a in aAlleles)
             {
                 str = String.Concat(str, $"_{a}_");
+            }
+            str = String.Concat(str, "\n");
+            foreach (var b in bAlleles)
+            {
+                str = String.Concat(str, $"_{b}_");
             }
             return str;
         }
