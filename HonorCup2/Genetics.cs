@@ -12,20 +12,20 @@ namespace HonorCup2
         private static Gene[] populaton = new Gene[MaxPopulation];
 
         /// <summary>Solve the task</summary>
-        public static int[] Solve(double[] quants, int[] roundedQuants)
+        public static int[] Solve(double[] aQuants, double[] bQuants, int[] aRoundedQuants, int[] bRoundedQuants)
         {
             //get zero indexes
-            var zeroIndexes = GetZeroValueIndexes(roundedQuants);
-
+            var aZeroIndexes = GetZeroValueIndexes(aRoundedQuants);
+            var bZeroIndexes = GetZeroValueIndexes(bRoundedQuants);
             //create population
             for (int i = 0; i < 50; i++)
             {
-                populaton[i] = new Gene(roundedQuants, zeroIndexes).Mutate();
+                populaton[i] = new Gene(aRoundedQuants, bRoundedQuants, aZeroIndexes, bZeroIndexes).Mutate();
                 
             }
 
             //calc fitness for current population
-            CalclulatePopulationFitness(quants, populaton);
+            CalclulatePopulationFitness(aQuants, bQuants, populaton);
 
 
 
@@ -56,11 +56,11 @@ namespace HonorCup2
             return array;
         }
 
-        public static void CalclulatePopulationFitness(double[] startQuants, Gene[] _population)
+        public static void CalclulatePopulationFitness(double[] aStartQuants, double[] bStartQuants, Gene[] _population)
         {
             foreach (var gene in _population)
             {
-                gene.Fitness = Filter.MeanSquareOfError(startQuants, gene.Alleles);
+                gene.Fitness = Filter.MeanSquareOfError(aStartQuants, bStartQuants, gene.bAlleles, gene.aAlleles);
                 Console.WriteLine(gene.Fitness);
             }
         }

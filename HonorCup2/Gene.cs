@@ -8,12 +8,14 @@ namespace HonorCup2
 {
     internal class Gene
     {
-        public int[] Alleles;
+        public int[] aAlleles;
+        public int[] bAlleles;
 
         public double Fitness;
         public double Likelihood;
         
-        private readonly Dictionary<int, int> zeroIndexes;
+        private readonly Dictionary<int, int> aZeroIndexes;
+        private readonly Dictionary<int, int> bZeroIndexes;
         private static readonly Random r;
 
         static Gene()
@@ -22,29 +24,38 @@ namespace HonorCup2
             
         }
 
-        public Gene(int[] quants, Dictionary<int, int> _zeroIndexes)
+        public Gene(int[] aQuants, int[] bQuants, Dictionary<int, int> _aZeroIndexes, Dictionary<int, int> _bZeroIndexes)
         {
-            zeroIndexes = _zeroIndexes;
-            Alleles = quants;
+            aZeroIndexes = _aZeroIndexes;
+            bZeroIndexes = _bZeroIndexes;
+            bAlleles = bQuants;
+            aAlleles = aQuants;
         }
         
         /// <summary>Mutate gene</summary>
         public Gene Mutate()
         {
-            int[] alleles = new int[Alleles.Length];
-
-            for (int i = 0; i < Alleles.Length; i++)
-            {
-                if (zeroIndexes.ContainsKey(i))
-                    alleles[i] = r.Next(-255, 255);
-                else
-                    alleles[i] = Alleles[i];
-            }
-
-            var gene = new Gene(alleles, zeroIndexes);
+            int[] _aAlleles = mutateAlleles(aAlleles, aZeroIndexes);
+            int[] _bAlleles = mutateAlleles(bAlleles, bZeroIndexes);
+            
+            var gene = new Gene(_aAlleles, _bAlleles, aZeroIndexes, bZeroIndexes);
 
             Console.WriteLine(gene.ToString());
             return gene;
+        }
+
+        private int[] mutateAlleles(int[] alleles, Dictionary<int, int> zeroIndexes)
+        {
+            var res = new int[alleles.Length];
+            for (int i = 0; i < alleles.Length; i++)
+            {
+                if (zeroIndexes.ContainsKey(i))
+                    res[i] = r.Next(-255, 255);
+                else
+                    res[i] = alleles[i];
+            }
+
+            return res;
         }
         
 
