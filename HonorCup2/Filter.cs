@@ -27,7 +27,7 @@ namespace HonorCup2
             for (int i = 0; i < 512; i++)
             {
                 grid[i] = (i * Math.PI) / K;
-                Console.WriteLine($"{grid[i]} {i}");
+               // Console.WriteLine($"{grid[i]} {i}");
             }
             return grid;
         }
@@ -67,16 +67,17 @@ namespace HonorCup2
         }
 
         /// <summary>Rounding rule</summary>
-        public static double FilterRound(double number) => Math.Round(number * 16);
+        public static int FilterRound(double number) => (int) Math.Round(number * 16);
 
         /// <summary>Round Array</summary>
-        public static double[] FilterRoundArray(double[] array)
+        public static int[] FilterRoundArray(double[] array)
         {
+            int[] roundedArray = new int[array.Length];
             for (int i = 0; i < array.Length; i++)
             {
-                array[i] = FilterRound(array[i]);
+                roundedArray[i] = FilterRound(array[i]);
             }
-            return array;
+            return roundedArray;
         }
         
         /// <summary>Mean Square of Error</summary>
@@ -95,6 +96,30 @@ namespace HonorCup2
             sum = sum / K;
 
             return sum;
+        }
+
+        /// <summary>Mean Square of Error</summary>
+        public static double MeanSquareOfError(double[] quants, int[] roundedQuants)
+        {
+            var rq = ToDoubleArray(roundedQuants);
+            var fGrid = FrequencyGrid;
+            var sum = 0d;
+            for (int i = 0; i < 512; i++)
+            {
+                var Hq = ComplexTransferСoefficient(rq, fGrid[i]);
+                var H = ComplexTransferСoefficient(quants, fGrid[i]);
+                var summary = Math.Pow(Complex.Abs(Hq - H), 2);
+                sum += summary;
+            }
+
+            sum = sum / K;
+
+            return sum;
+        }
+
+        private static double[] ToDoubleArray(int[] array)
+        {
+            return array.Select(x => (double) x).ToArray();
         }
     }
 }

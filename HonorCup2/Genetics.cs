@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,16 +9,27 @@ namespace HonorCup2
     internal class Genetics
     {
         private const int MaxPopulation = 50;
-        private int GeneSize;
+        private static Gene[] populaton = new Gene[MaxPopulation];
 
-        public int[] Solve(double[] quants)
+        /// <summary>Solve the task</summary>
+        public static int[] Solve(double[] quants, int[] roundedQuants)
         {
+            //get zero indexes
+            var zeroIndexes = GetZeroValueIndexes(roundedQuants);
+
+            //create population
+            for (int i = 0; i < 50; i++)
+            {
+                populaton[i] = new Gene(roundedQuants, zeroIndexes).Mutate();
+                
+            }
+            //calc fitness
+            CalclulatePopulationFitness(quants, populaton);
 
             return new int[0];
         }
         
-
-        /// <summary>Returns Indexes of zero elements of array</summary>
+        /// <summary>Returns indexes of zero elements of array</summary>
         public static Dictionary<int, int> GetZeroValueIndexes(int[] array)
         {
             var zeroIndexes = new Dictionary<int, int>();
@@ -32,14 +42,7 @@ namespace HonorCup2
             }
             return zeroIndexes;
         }
-
-        //test
-        public static Dictionary<int, int> MutateZeroValues(Dictionary<int, int> newValues)
-        {
-            return newValues.Select(x => new KeyValuePair<int, int>(x.Key, 11))
-                                   .ToDictionary(x => x.Key, y => y.Value);
-        }
-
+        
         /// <summary>Returned values from newValues to its places in array</summary>
         public static int[] ReturnValuesInPlace(int[] array, Dictionary<int, int> newValues)
         {
@@ -48,6 +51,22 @@ namespace HonorCup2
                 array[value.Key] = value.Value;
             }
             return array;
+        }
+
+        public static void CalclulatePopulationFitness(double[] startQuants, Gene[] _population)
+        {
+            foreach (var gene in _population)
+            {
+                gene.Fitness = Filter.MeanSquareOfError(startQuants, gene.Alleles);
+            }
+        }
+
+        #region Test
+        //test
+        public static Dictionary<int, int> MutateZeroValues(Dictionary<int, int> values)
+        {
+            return values.Select(x => new KeyValuePair<int, int>(x.Key, 11))
+                .ToDictionary(x => x.Key, y => y.Value);
         }
 
         //test
@@ -59,7 +78,6 @@ namespace HonorCup2
 
             return result;
         }
-        
-
+        #endregion
     }
 }

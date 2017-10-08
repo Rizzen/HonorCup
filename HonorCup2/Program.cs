@@ -51,14 +51,22 @@ namespace HonorCup2
 
             //Console.WriteLine($"{Complex.Abs(new Complex(1,1) * new Complex(1, 1))}");
 
-            var arr = new[] {0, 1, 0, 0, 0, 1, 1};
+            var arr = new[] {0.5, -0.0001, 0.0012, 0.07, -0.0001, 0.0007};
 
-            var res = Genetics.MutateValues(arr);
+            var newArr = Filter.FilterRoundArray(arr);
 
-            foreach (var i in res)
-            {
-                Console.WriteLine($"{i}");
-            }
+            Genetics.Solve(newArr);
+            //var d = newArr.Select(x => (double) x).ToArray();
+
+            //var mse = Filter.MeanSquareOfError(arr, d);
+            ////var res = Genetics.MutateValues(arr);
+
+            //foreach (var i in newArr)
+            //{
+            //    Console.WriteLine($"{i}");
+            //}
+
+            //Console.WriteLine($"{mse}");
 
             //Console.WriteLine($"{arr.Count(x => x == 0)}");
             Console.ReadLine();

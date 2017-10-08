@@ -9,12 +9,57 @@ namespace HonorCup2
     internal class Gene
     {
         public int[] Alleles;
-        public int Fitness;
-        public double Likelihood;
 
-        public Gene(int geneSize) //possible to add gene list in ctor
+        public double Fitness;
+        public double Likelihood;
+        
+        private readonly Dictionary<int, int> zeroIndexes;
+        private static readonly Random r;
+
+        static Gene()
         {
-            Alleles = new int [geneSize];
+            r = new Random();
+            Console.WriteLine("in static ctor");
         }
+
+        public Gene(int[] quants, Dictionary<int, int> _zeroIndexes) // possible to add list of quants here
+        {
+            zeroIndexes = _zeroIndexes;
+            Alleles = quants;
+        }
+        
+        /// <summary>Mutate gene</summary>
+        public Gene Mutate()
+        {
+            int[] alleles = new int[Alleles.Length];
+
+            for (int i = 0; i < Alleles.Length; i++)
+            {
+                if (zeroIndexes.ContainsKey(i))
+                    alleles[i] = r.Next(-255, 255);
+                else
+                    alleles[i] = Alleles[i];
+            }
+
+            var gene = new Gene(alleles, zeroIndexes);
+
+            Console.WriteLine(gene.ToString());
+            return gene;
+        }
+        
+
+        
+        #region Override
+        public override string ToString()
+        {
+            var str = $"Gene {this.GetHashCode()} contains:";
+            foreach (var a in Alleles)
+            {
+                str = String.Concat(str, $"_{a}_");
+            }
+            return str;
+        }
+        #endregion
+
     }
 }
